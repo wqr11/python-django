@@ -20,5 +20,5 @@ from api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ping', views.ping)
+    path('auth/<int:tg_id>', views.auth_user),
 ]

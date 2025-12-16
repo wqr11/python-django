@@ -2,6 +2,9 @@ from time import time
 from django.db import models
 from .utils.snowflake import snowflake_id
 
+tag_snowflake_factory = snowflake_id(0)
+todo_snowflake_factory = snowflake_id(1)
+
 class User(models.Model):
     tg_id = models.BigIntegerField(primary_key=True)
 
@@ -10,7 +13,7 @@ class User(models.Model):
         return f'<User_tg: {self.tg_id}>'
 
 class Tag(models.Model):
-    id = models.BigIntegerField(primary_key=True, default=lambda: snowflake_id(entity=0))
+    id = models.BigIntegerField(primary_key=True, default=tag_snowflake_factory)
     content = models.CharField(max_length=128)
 
     # For logging purposes
@@ -18,7 +21,7 @@ class Tag(models.Model):
         return f'<Tag: {content}>'
 
 class Todo(models.Model):
-    id = models.BigIntegerField(primary_key=True, default=lambda: snowflake_id(entity=1))
+    id = models.BigIntegerField(primary_key=True, default=todo_snowflake_factory)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
     content = models.TextField(default='')
