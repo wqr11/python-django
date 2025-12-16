@@ -1,0 +1,5 @@
+[mypy]
+plugins = mypy_django_plugin.main
+django_settings_module = server.settings
+ignore_missing_imports = False
+disallow_untyped_defs = True
