@@ -1,25 +1,14 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpRequest, HttpResponseBadRequest
-from json import dumps
+from django.http import JsonResponse, HttpRequest, Http
 from .models import User
+from .handle_user import handle_tg_user
 
-async def auth_user(request: HttpRequest, tg_id: int):
-    if not tg_id:
-        return HttpResponseBadRequest("tg_id is necessary")
+async def create_todo(request: HttpRequest, tg_id: int):
+    if request.method != 'POST': return
 
-    try:
-        found_user = await User.objects.filter(tg_id=tg_id).afirst()
+    data = handle_tg_user(request, tg_id)
 
-        if not found_user:
-            new_user = User(tg_id=tg_id)
+    content = request.POST.get("content")
 
-            new_user.save()
 
-            return JsonResponse({ "success": True, "event_type": "USER_CREATED" })
-    
-        return JsonResponse({ "success": True, "event_type": "USER_EXISTS", "data": data })
-
-    except Exception as e:
-        print(e)
-        return JsonResponse({ "success": False })
 
